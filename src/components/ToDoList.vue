@@ -1,24 +1,41 @@
 <template>
-  <div>
-    <h1>Latihan Vue CLI</h1>
+  <div class="todo-container">
+    <h1>Todo List</h1>
 
     <div class="todo-list-box">
-     <div
-      class="todo-list"
+      <div v-if="!editing">
+      <div
+      class="todo-list flex"
       v-for="(todo, index) in todos"
       :key="index"
     >
-          <div class="status-text">
-           <h5>
+          <div style="width: 80%;">
           {{ index + 1 }}. {{ todo.name }} 
-          </h5>
           </div>
-    </div>
+          <button class="submit-btn" @click="deleteTodo(index)">Hapus</button>
+          <button class="submit-btn" @click="editTodo(index)">Edit</button>
+           </div>
+       </div>
+
+      <div v-else>
+      <div
+      class="todo-list flex"
+      v-for="(todo, index) in todos"
+      :key="index"  
+    >
+          <input class="form-control form-input" v-model="changeTodo"/>
+          <button class="submit-btn" @click="deleteTodo(index)">Hapus</button>
+          <button class="submit-btn" @click="updateTodo(index)">Edit</button>
+           </div>
+       </div>
+
+
     </div>
 
     <!-- <form> -->
+      <div class="flex">
       <input
-        v-model="newTodo"
+       v-model="newTodo"
         type="text"
         placeholder="Enter To Do"
         class="form-control form-input"
@@ -26,24 +43,31 @@
       <button type="submit" class="submit-btn" @click="addTodo()">
         Tambahkan
       </button>
+      </div>
     <!-- </form> -->
 
     <div class="msg">{{ msg }}</div>
    
+
   </div>
+
 </template>
     
 <script>
+
 export default {
   name: "ToDoList",
 
-  data() {
-    return {
+
+  data() {   
+   return {
       newTodo: "",
+      changeTodo: "",
       indexEditTodo: null,
       tempNameTodo: "",
-      todos: [],
+      todos: [ {name: "Belajar VueJs 2"}, {name: "Belajar VueJs 3"}, {name: "Belajar VueJs 4",}],
       msg: "",
+      editing: false,
     };
   },
 
@@ -68,15 +92,36 @@ export default {
 
       this.newTodo = "";
     },
-
+     editTodo(index) {
+      this.editing = true;
+      this.changeTodo = this.todos[index].name;
+      this.indexEditTodo = index;
+    },
+    updateTodo(index) {
+      this.editing = false;
+      this.changeTodo = this.todos[index].name;
+      this.indexEditTodo = index;
+    },
+    deleteTodo(index) {
+      this.todos.splice(index, 1);
+    },
   },
 };
 </script>
 
 <style scoped>
+
+.flex {
+  display: flex;
+}
+
+.todo-container {
+  text-align: left;
+}
+
 .form-input {
+  width: 80%;
   border: 1px solid #333;
-  margin-right: 0.5rem;
   padding: 0.5rem 1rem 0.5rem 1rem;
   border-radius: 10px;
 }
@@ -85,16 +130,18 @@ export default {
   /* border: none; */
 }
 .submit-btn {
+  margin: auto 2rem auto 2rem;
   font-size: 14px;
   color: #333;
 }
 .todo-list-box {
-    width: 15rem;
     margin: auto;
     text-align: left;
-}
+} 
 .todo-list {
- border: 1px;
+  margin: auto auto 1rem auto;
+  display: flex;
+  border: 1px;
 }
 .status-text {
   cursor: pointer;
@@ -103,7 +150,7 @@ export default {
   cursor: pointer;
 }
 .msg {
-    width: 15rem;
+
     margin: 0.5rem auto auto auto;
     text-align: left;
 }

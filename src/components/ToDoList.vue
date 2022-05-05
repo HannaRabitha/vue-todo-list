@@ -3,33 +3,26 @@
     <h1>Todo List</h1>
 
     <div class="todo-list-box">
-      <div v-if="!editing">
-      <div
-      class="todo-list flex"
+    <div
       v-for="(todo, index) in todos"
       :key="index"
     >
-          <div style="width: 80%;">
+
+      <div v-if="!editing" class="todo-list flex">
+          <div style="width: 80%;"> 
           {{ index + 1 }}. {{ todo.name }} 
           </div>
           <button class="submit-btn" @click="deleteTodo(index)">Hapus</button>
           <button class="submit-btn" @click="editTodo(index)">Edit</button>
-           </div>
-       </div>
+      </div>
 
-      <div v-else>
-      <div
-      class="todo-list flex"
-      v-for="(todo, index) in todos"
-      :key="index"  
-    >
-          <input class="form-control form-input" v-model="changeTodo"/>
+      <div v-else class="todo-list flex">
+          <input style="width: 80%" class="form-control form-input" v-model="changeTodo"/>
           <button class="submit-btn" @click="deleteTodo(index)">Hapus</button>
-          <button class="submit-btn" @click="updateTodo(index)">Edit</button>
-           </div>
-       </div>
+          <button class="submit-btn" @click="updateTodo(index)">Update</button>
+      </div>
 
-
+      </div>
     </div>
 
     <!-- <form> -->
@@ -65,7 +58,7 @@ export default {
       changeTodo: "",
       indexEditTodo: null,
       tempNameTodo: "",
-      todos: [ {name: "Belajar VueJs 2"}, {name: "Belajar VueJs 3"}, {name: "Belajar VueJs 4",}],
+      todos: [],
       msg: "",
       editing: false,
     };
@@ -97,10 +90,11 @@ export default {
       this.changeTodo = this.todos[index].name;
       this.indexEditTodo = index;
     },
-    updateTodo(index) {
+    updateTodo() {
       this.editing = false;
-      this.changeTodo = this.todos[index].name;
-      this.indexEditTodo = index;
+      this.todos[this.indexEditTodo].name = this.changeTodo;
+      this.indexEditTodo = null;
+      
     },
     deleteTodo(index) {
       this.todos.splice(index, 1);
